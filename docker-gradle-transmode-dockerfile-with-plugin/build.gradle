@@ -65,6 +65,4 @@ task buildDocker(type: Docker) {
             into stageDir
         }
 	}
-  }
-
-buildDocker.dependsOn(build)
+}
