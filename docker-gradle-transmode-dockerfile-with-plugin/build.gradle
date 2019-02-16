@@ -57,13 +57,11 @@ task tagDocker(type: Docker) {
 }
 
 task buildDocker(type: Docker) {
-  baseImage = 'java:8'
-  //tag = 'utility-spring/docker-projects'
-  applicationName = bootJar.baseName
+  applicationName = jar.baseName
   dockerfile = file('src/main/docker/Dockerfile')
   	doFirst {
         copy {
-            from bootJar
+            from jar
             into stageDir
         }
 	}
