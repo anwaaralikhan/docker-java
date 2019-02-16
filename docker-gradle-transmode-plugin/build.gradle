@@ -1,0 +1,71 @@
+buildscript {
+	ext {
+		springBootVersion = '2.1.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath('se.transmode.gradle:gradle-docker:1.2')
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.1.3.RELEASE'
+	id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'application'
+apply plugin: 'docker'
+
+group = 'com.dc.docker.gradle'
+version = '1.0'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+mainClassName = 'com.dc.docker.gradle.DockerGradleTransmodePluginApplication'
+
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+
+docker {
+    baseImage "java:8"
+    maintainer 'Anwaar Mehmood "https://github.com/anwaaralikhan"'
+}
+
+distDocker {
+    exposePort 8080
+}
+
+task tagDocker(type: Docker) {
+    applicationName = 'docker-gradle-transmode-plugin'
+    tagVersion = '1.0'
+}
+
+task buildDocker(type: Docker) {
+  baseImage = 'java:8'
+  //tag = 'utility-spring/docker-projects'
+  applicationName = bootJar.baseName
+  addFile {
+    from bootJar
+    rename {'dockerized-app.jar'}
+  }
+  entryPoint(['java','-jar', '/dockerized-app.jar'])
+  exposePort(8080)
+}
+
+buildDocker.dependsOn(build)
