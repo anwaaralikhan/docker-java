@@ -59,10 +59,4 @@ task tagDocker(type: Docker) {
 task buildDocker(type: Docker) {
   applicationName = bootJar.baseName
   dockerfile = file('Dockerfile')
-  	doFirst {
-        copy {
-            from bootJar
-            into stageDir
-        }
-	}
 }
