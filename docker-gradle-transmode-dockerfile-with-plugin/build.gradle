@@ -67,12 +67,6 @@ task buildDocker(type: Docker) {
             into stageDir
         }
 	}
-  addFile {
-    from stageDir
-    rename {'dockerized-app-using-dockerfile.jar'}
   }
-  entryPoint(['java','-jar', '/dockerized-app-using-dockerfile.jar'])
-  exposePort(8080)
-}
 
 buildDocker.dependsOn(build)
