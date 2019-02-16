@@ -59,6 +59,12 @@ task tagDocker(type: Docker) {
 task buildDocker(type: Docker) {
   applicationName = jar.baseName
   dockerfile = file('src/main/docker/Dockerfile')
-}
+  	doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
+	}
+  }
 
 buildDocker.dependsOn(build)
